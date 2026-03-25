@@ -19,8 +19,8 @@ begin
         add_filter "/vendor/"
         
         add_group "Personal Income Tax", "lib/tax_calculator/personal_income_tax"
-        add_group "Corporate Tax", "lib/tax_calculator/CorporateTax"
-        add_group "VAT", "lib/tax_calculator/Vat"
+        add_group "Corporate Tax", "lib/tax_calculator/corporate_tax"
+        add_group "VAT", "lib/tax_calculator/vat"
         add_group "Tax Benefits", "lib/tax_calculator/tax_benefits"
         add_group "Tax Deductions", "lib/tax_calculator/tax_deductions"
         add_group "Config", "lib/tax_calculator/config"

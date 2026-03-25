@@ -18,12 +18,12 @@ $LOAD_PATH.unshift(PROJECT_ROOT) unless $LOAD_PATH.include?(PROJECT_ROOT)
 CANDIDATE_NAMES = %w[
   version.rb
   config.rb
-  CorporateTax.rb       corporate_tax.rb
+  corporate_tax.rb       corporate_tax.rb
   personal_income_tax.rb
   tax_benefits.rb
   tax_deductions.rb
-  VAT.rb                vat.rb
-  TaxReports.rb         tax_reports.rb
+  vat.rb                vat.rb
+  tax_reports.rb         tax_reports.rb
 ].freeze
 
 CANDIDATE_NAMES.each do |filename|

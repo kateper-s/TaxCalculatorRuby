@@ -2,11 +2,11 @@
 require_relative 'tax_calculator/version'
 require_relative 'tax_calculator/config'
 require_relative 'tax_calculator/personal_income_tax'
-require_relative 'tax_calculator/CorporateTax'  
-require_relative 'tax_calculator/VAT'
+require_relative 'tax_calculator/corporate_tax'  
+require_relative 'tax_calculator/vat'
 require_relative 'tax_calculator/tax_deductions'
 require_relative 'tax_calculator/tax_benefits'
-require_relative 'tax_calculator/TaxReports'
+require_relative 'tax_calculator/tax_reports'
 
 module TaxCalculator
   class Error < StandardError; end
