@@ -1,60 +1,32 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'minitest/mock'
-require 'json'
-require 'csv'
+require "minitest/autorun"
 
-if ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start do
-    add_filter 'test/'
-    add_group 'Core', 'lib/tax_calculator'
-    add_group 'Utilities', 'lib/tax_calculator/utils'
-  end
-end
+require "date"
+require "json"
+require "csv"
+require "securerandom"
+require "time"
 
-require_relative '../lib/tax_calculator'
+# Project root is one level above /test
+PROJECT_ROOT = File.expand_path("..", __dir__)
+LIB_DIR      = File.join(PROJECT_ROOT, "lib")
 
-class Minitest::Test
-  def setup
-    if TaxCalculator.respond_to?(:reset_config!)
-      TaxCalculator.reset_config!
-    end
-  
-    TaxCalculator.configure do |config|
-      config.default_ndfl_rate = 0.13
-      config.default_vat_rate = 0.20
-      config.default_profit_rate = 0.20
-      config.region = :test
-      config.currency = :rub
-      config.rounding_precision = 2
-      config.auto_apply_deductions = false
-      config.validation_strictness = :test
-    end
-  end
+$LOAD_PATH.unshift(LIB_DIR)      unless $LOAD_PATH.include?(LIB_DIR)
+$LOAD_PATH.unshift(PROJECT_ROOT) unless $LOAD_PATH.include?(PROJECT_ROOT)
 
-  def teardown
-  end
+# Load files by their actual names inside lib/tax_calculator/.
+# Handles both PascalCase originals and snake_case renames.
+CANDIDATE_NAMES = %w[
+  version.rb
+  config.rb
+  CorporateTax.rb       corporate_tax.rb
+  personal_income_tax.rb
+  tax_benefits.rb
+  tax_deductions.rb
+  VAT.rb                vat.rb
+  TaxReports.rb         tax_reports.rb
+].freeze
 
-  def assert_tax_calculation(expected_tax, income, options = {})
-    result = TaxCalculator.calculate_ndfl(income, **options)
-    assert_equal expected_tax, result[:tax_amount]
-  end
-
-  def assert_within_tolerance(expected, actual, tolerance = 0.01)
-    assert_in_delta expected, actual, tolerance
-  end
-
-  def fixture_file(filename)
-    File.expand_path("fixtures/#{filename}", __dir__)
-  end
-  
-  def create_temp_csv(data)
-    Tempfile.create(['test', '.csv']) do |file|
-      CSV.open(file.path, 'w') do |csv|
-        data.each { |row| csv << row }
-      end
-      yield file.path
-    end
-  end
+CANDIDATE_NAMES.each do |filename|
+  full = File.join(LIB_DIR, "tax_calculator", filename)
+  require full if File.exist?(full) && !$LOADED_FEATURES.include?(full)
 end

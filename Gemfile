@@ -1,10 +1,7 @@
-source 'https://rubygems.org'
-
-gemspec
+source "https://rubygems.org"
 
 group :development, :test do
-  gem 'minitest'
-  gem 'rake'
-  gem 'pry'
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
+  gem "rake"
+  gem "minitest"
 end
