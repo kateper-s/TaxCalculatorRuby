@@ -1,0 +1,3 @@
+module TaxCalculator
+  VERSION: String
+end
