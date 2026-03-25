@@ -1,4 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'rspec', '~> 3.0'
-gem 'rubocop', '~> 1.0'
+gemspec
+
+group :development, :test do
+  gem 'minitest'
+  gem 'rake'
+  gem 'pry'
+  gem 'simplecov', require: false
+end

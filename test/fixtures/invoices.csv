@@ -1,0 +1,4 @@
+number,date,amount,vat_rate,type,counterparty
+INV-001,2024-01-15,100000,0.20,sale,Client LLC
+INV-002,2024-01-20,30000,0.20,purchase,Supplier LLC
+INV-003,2024-02-10,50000,0.10,sale,Client 2 LLC

@@ -1,0 +1,5 @@
+date,description,amount,type
+2024-01-15,Client payment,100000,income
+2024-01-20,Office rent,30000,expense
+2024-02-10,Consulting,50000,income
+2024-02-15,Software,20000,expense
