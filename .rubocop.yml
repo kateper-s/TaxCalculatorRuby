@@ -1,6 +1,6 @@
 # .rubocop.yml
 inherit_from:
-  - .rubocop_todo.yml   # если хотите постепенно исправлять нарушения
+  - .rubocop.yml
 
 AllCops:
   NewCops: enable
