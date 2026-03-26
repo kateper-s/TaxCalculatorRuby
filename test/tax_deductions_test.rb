@@ -35,7 +35,7 @@ module TaxCalculator
       assert_equal 400_000, TaxDeductions::TYPES[:investment][:iis_type_a][:max]
     end
 
-      def test_children_one_child_stored
+    def test_children_one_child_stored
       @d.apply(:children, count: 1, details: {})
       deductions = @d.instance_variable_get(:@applied_deductions)
       assert_equal 1, deductions.size
@@ -96,7 +96,7 @@ module TaxCalculator
       assert_equal :child, entry[:who]
     end
 
-        def test_medical_regular_capped_at_120_000
+    def test_medical_regular_capped_at_120_000
       @d.apply(:medical, amount: 200_000, type: :regular)
       amount = @d.instance_variable_get(:@applied_deductions).first[:amount]
       assert_equal 120_000, amount
