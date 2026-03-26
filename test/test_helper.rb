@@ -6,15 +6,12 @@ require "csv"
 require "securerandom"
 require "time"
 
-# Project root is one level above /test
 PROJECT_ROOT = File.expand_path("..", __dir__)
 LIB_DIR      = File.join(PROJECT_ROOT, "lib")
 
 $LOAD_PATH.unshift(LIB_DIR)      unless $LOAD_PATH.include?(LIB_DIR)
 $LOAD_PATH.unshift(PROJECT_ROOT) unless $LOAD_PATH.include?(PROJECT_ROOT)
 
-# Load files by their actual names inside lib/tax_calculator/.
-# Handles both PascalCase originals and snake_case renames.
 CANDIDATE_NAMES = %w[
   version.rb
   config.rb

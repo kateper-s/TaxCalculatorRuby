@@ -7,8 +7,6 @@ module TaxCalculator
       @d = TaxDeductions.new
     end
 
-    # ── TYPES constant ────────────────────────────────────────────────────────
-
     def test_types_constant_is_frozen
       assert TaxDeductions::TYPES.frozen?
     end
@@ -37,11 +35,7 @@ module TaxCalculator
       assert_equal 400_000, TaxDeductions::TYPES[:investment][:iis_type_a][:max]
     end
 
-    # ── apply stores deductions ───────────────────────────────────────────────
-    # We check @applied_deductions directly to avoid calling remaining_deductions,
-    # which depends on undefined private methods in the source.
-
-    def test_children_one_child_stored
+      def test_children_one_child_stored
       @d.apply(:children, count: 1, details: {})
       deductions = @d.instance_variable_get(:@applied_deductions)
       assert_equal 1, deductions.size
@@ -78,8 +72,6 @@ module TaxCalculator
       assert entry[:monthly]
     end
 
-    # ── education ─────────────────────────────────────────────────────────────
-
     def test_education_self_capped_at_120_000
       @d.apply(:education, amount: 200_000, who: :self)
       amount = @d.instance_variable_get(:@applied_deductions).first[:amount]
@@ -104,9 +96,7 @@ module TaxCalculator
       assert_equal :child, entry[:who]
     end
 
-    # ── medical ───────────────────────────────────────────────────────────────
-
-    def test_medical_regular_capped_at_120_000
+        def test_medical_regular_capped_at_120_000
       @d.apply(:medical, amount: 200_000, type: :regular)
       amount = @d.instance_variable_get(:@applied_deductions).first[:amount]
       assert_equal 120_000, amount
@@ -123,8 +113,6 @@ module TaxCalculator
       entry = @d.instance_variable_get(:@applied_deductions).first
       assert entry[:unlimited]
     end
-
-    # ── property ──────────────────────────────────────────────────────────────
 
     def test_property_deduction_basic
       @d.apply(:property, purchase_price: 1_500_000, mortgage: 0)
@@ -162,8 +150,6 @@ module TaxCalculator
       assert_in_delta 390_000, mortgage_entry[:amount], 1  # 3_000_000 * 0.13
     end
 
-    # ── investment ────────────────────────────────────────────────────────────
-
     def test_investment_type_a_capped_at_400_000
       @d.apply(:investment, iis_type: :type_a, amount: 600_000)
       entry = @d.instance_variable_get(:@applied_deductions).first
@@ -182,7 +168,6 @@ module TaxCalculator
       assert_equal :tax_free_profit, entry[:benefit]
     end
 
-    # ── apply_bulk ────────────────────────────────────────────────────────────
 
     def test_apply_bulk_processes_multiple_deductions
       @d.apply_bulk(
@@ -198,9 +183,6 @@ module TaxCalculator
       amount = @d.instance_variable_get(:@applied_deductions).first[:amount]
       assert_equal 2_800, amount
     end
-
-    # ── carryover_to_next_year ────────────────────────────────────────────────
-    # Source calls undefined carryover_by_type — skip the call, test structure only.
 
     def test_carryover_method_exists
       assert_respond_to @d, :carryover_to_next_year

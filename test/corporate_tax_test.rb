@@ -67,8 +67,6 @@ module TaxCalculator
       assert_equal :linear, @ct.instance_variable_get(:@depreciation_method)
     end
 
-    # ── add_transaction ───────────────────────────────────────────────────────
-
     def test_add_transaction_stores_entry
       @ct.add_transaction(date: Date.today, description: "Sale", amount: 50_000, type: :income)
       assert_equal 1, @ct.instance_variable_get(:@transactions).size

@@ -3,8 +3,6 @@ require_relative "test_helper"
 module TaxCalculator
   class PersonalIncomeTaxTest < Minitest::Test
 
-    # ── constants ─────────────────────────────────────────────────────────────
-
     def test_progressive_rates_frozen
       assert PersonalIncomeTax::PROGRESSIVE_RATES.frozen?
     end
@@ -20,8 +18,6 @@ module TaxCalculator
     def test_progressive_rates_second_threshold
       assert_equal 5_000_000, PersonalIncomeTax::PROGRESSIVE_RATES[1][:threshold]
     end
-
-    # ── initialization ────────────────────────────────────────────────────────
 
     def test_residency_status_default_is_resident
       pit = PersonalIncomeTax.new(annual_income: 100_000)
@@ -47,8 +43,6 @@ module TaxCalculator
       pit = PersonalIncomeTax.new
       assert_empty pit.instance_variable_get(:@additional_incomes)
     end
-
-    # ── add_income ────────────────────────────────────────────────────────────
 
     def test_add_income_stores_entry
       pit = PersonalIncomeTax.new(annual_income: 0)

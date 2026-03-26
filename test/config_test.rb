@@ -7,8 +7,6 @@ module TaxCalculator
       @config = Config.new
     end
 
-    # --- default values ---
-
     def test_default_ndfl_rate
       assert_equal 0.13, @config.default_ndfl_rate
     end
@@ -49,7 +47,6 @@ module TaxCalculator
       assert_equal :normal, @config.validation_strictness
     end
 
-    # --- mutability ---
 
     def test_ndfl_rate_can_be_changed
       @config.default_ndfl_rate = 0.15
@@ -65,8 +62,6 @@ module TaxCalculator
       @config.rounding_precision = 4
       assert_equal 4, @config.rounding_precision
     end
-
-    # --- multiple independent instances ---
 
     def test_two_instances_are_independent
       other = Config.new

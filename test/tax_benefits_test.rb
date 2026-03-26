@@ -7,8 +7,6 @@ module TaxCalculator
       @benefits = TaxBenefits.new
     end
 
-    # ── constant ──────────────────────────────────────────────────────────────
-
     def test_benefit_categories_frozen
       assert TaxBenefits::BENEFIT_CATEGORIES.frozen?
     end
@@ -32,8 +30,6 @@ module TaxCalculator
     def test_pensioners_property_tax_exemption
       assert TaxBenefits::BENEFIT_CATEGORIES[:pensioners][:property_tax_exemption]
     end
-
-    # ── regional coefficient ──────────────────────────────────────────────────
 
     def test_far_east_coefficient
       b = TaxBenefits.new(region: :far_east)
