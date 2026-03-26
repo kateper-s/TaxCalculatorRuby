@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module TaxCalculator
   class TaxDeductions
     TYPES = {
       standard: {
-        base: 3000, 
+        base: 3000,
         children: { first: 1400, second: 1400, third: 3000 },
         disabled: 3000,
         single_parent: 2800
@@ -11,7 +13,7 @@ module TaxCalculator
         education: { max: 120_000, self_max: 150_000 },
         medical: { max: 120_000, expensive: :unlimited },
         pension: { max: 120_000 },
-        charity: { max: 0.25 } 
+        charity: { max: 0.25 }
       },
       property: {
         purchase: { max: 2_000_000, refund: 260_000 },
@@ -69,7 +71,7 @@ module TaxCalculator
 
     def remaining_deductions
       used = @applied_deductions.sum { |d| d[:amount] }
-      
+
       {
         used: used,
         remaining_standard: calculate_remaining_standard,
@@ -91,7 +93,7 @@ module TaxCalculator
 
     def apply_children_deduction(count, details = {})
       deduction = 0
-      
+
       count.times do |i|
         case i
         when 0, 1 then deduction += 1400
@@ -99,19 +101,19 @@ module TaxCalculator
         else deduction += 3000 if i >= 3
         end
       end
-      
+
       deduction *= 2 if details[:single_parent]
       deduction *= 1.5 if details[:disabled_child]
-      
+
       @applied_deductions << { type: :children, amount: deduction, monthly: true }
     end
 
     def apply_education_deduction(amount, who = :self)
-      max_amount = (who == :self) ? 120_000 : 50_000
+      max_amount = who == :self ? 120_000 : 50_000
       actual_amount = [amount, max_amount].min
-      
-      @applied_deductions << { 
-        type: :education, 
+
+      @applied_deductions << {
+        type: :education,
         amount: actual_amount,
         who: who,
         date: Time.now
@@ -130,20 +132,20 @@ module TaxCalculator
     def apply_property_deduction(purchase_price, mortgage_interest = 0)
       property_deduction = [purchase_price, 2_000_000].min * 0.13
       mortgage_deduction = [mortgage_interest, 3_000_000].min * 0.13
-      
-      @applied_deductions << { 
-        type: :property, 
+
+      @applied_deductions << {
+        type: :property,
         amount: property_deduction,
-        description: "Purchase deduction"
+        description: 'Purchase deduction'
       }
-      
-      if mortgage_interest > 0
-        @applied_deductions << { 
-          type: :property_mortgage, 
-          amount: mortgage_deduction,
-          description: "Mortgage interest deduction"
-        }
-      end
+
+      return unless mortgage_interest.positive?
+
+      @applied_deductions << {
+        type: :property_mortgage,
+        amount: mortgage_deduction,
+        description: 'Mortgage interest deduction'
+      }
     end
 
     def apply_investment_deduction(iis_type, amount)

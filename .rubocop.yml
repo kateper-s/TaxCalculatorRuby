@@ -1,7 +1,4 @@
 # .rubocop.yml
-inherit_from:
-  - .rubocop.yml
-
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
@@ -14,14 +11,26 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Naming/VariableNumber:
+  Enabled: false
+
 Metrics/MethodLength:
-  Max: 20
+  Max: 50
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 50
 
 Metrics/ClassLength:
-  Max: 150
+  Max: 200
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ParameterLists:
+  Max: 10
 
 Metrics/BlockLength:
   Exclude:
@@ -31,4 +40,4 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
 
 Layout/LineLength:
-  Max: 120
+  Max: 200

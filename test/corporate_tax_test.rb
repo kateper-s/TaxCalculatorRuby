@@ -7,8 +7,6 @@ module TaxCalculator
       @ct = CorporateTax.new
     end
 
-    # ── constants ─────────────────────────────────────────────────────────────
-
     def test_tax_systems_frozen
       assert CorporateTax::TAX_SYSTEMS.frozen?
     end
@@ -38,8 +36,6 @@ module TaxCalculator
     def test_eshn_rate_is_6_percent
       assert_equal 0.06, CorporateTax::TAX_SYSTEMS[:eshn][:rate]
     end
-
-    # ── initialization ────────────────────────────────────────────────────────
 
     def test_default_tax_system_is_osn
       assert_equal :osn, @ct.instance_variable_get(:@tax_system)
@@ -117,8 +113,6 @@ module TaxCalculator
       assert_equal ids.uniq.size, ids.size
     end
 
-    # ── calculate_depreciation ────────────────────────────────────────────────
-
     def test_linear_depreciation_annual
       result = @ct.calculate_depreciation(asset_value: 120_000, useful_life: 10, method: :linear)
       assert_in_delta 12_000, result[:annual], 0.01
@@ -160,8 +154,6 @@ module TaxCalculator
       assert_equal [1, 2, 3], result[:schedule].map { |s| s[:year] }
     end
 
-    # ── import_transactions (CSV) ─────────────────────────────────────────────
-
     def test_import_transactions_adds_entries
       csv = "date,description,amount,type,vat_rate\n2024-01-15,Sale,50000,income,0.20\n"
       @ct.import_transactions(csv)
@@ -194,11 +186,7 @@ module TaxCalculator
       @ct.import_transactions(csv)
       assert_equal 3, @ct.instance_variable_get(:@transactions).size
     end
-
-    # ── losses carryforward ───────────────────────────────────────────────────
-
     def test_losses_suggestion_when_previous_year_losses_exist
-      # Stub all missing private methods so tax_optimization_suggestions can run
       %w[calculate_profit_tax calculate_investment_credit calculate_losses_benefit
          has_investment_expenses? compare_tax_systems].each do |m|
         @ct.define_singleton_method(m) { |*| {} }

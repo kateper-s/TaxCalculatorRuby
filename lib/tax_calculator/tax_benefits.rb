@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TaxCalculator
   class TaxBenefits
     BENEFIT_CATEGORIES = {
@@ -34,34 +36,34 @@ module TaxCalculator
 
     def check_eligibility(taxpayer_info)
       eligible_benefits = []
-      
+
       BENEFIT_CATEGORIES.each do |category, benefits|
-        if qualifies_for?(category, taxpayer_info)
-          eligible_benefits << {
-            category: category,
-            benefits: benefits,
-            potential_savings: calculate_potential_savings(benefits, taxpayer_info)
-          }
-        end
+        next unless qualifies_for?(category, taxpayer_info)
+
+        eligible_benefits << {
+          category: category,
+          benefits: benefits,
+          potential_savings: calculate_potential_savings(benefits, taxpayer_info)
+        }
       end
-      
+
       eligible_benefits
     end
 
     def apply_regional_coefficient(amount)
       coefficient = case @region
-      when :far_east then 1.2
-      when :siberia then 1.15
-      when :north then 1.5
-      else 1.0
-      end
-      
+                    when :far_east then 1.2
+                    when :siberia then 1.15
+                    when :north then 1.5
+                    else 1.0
+                    end
+
       amount * coefficient
     end
 
     def calculate_tax_burden(annual_income, with_benefits: true)
       base_tax = annual_income * 0.13
-      
+
       if with_benefits && @active_benefits.any?
         reduced_tax = apply_benefits_to_tax(base_tax)
         {

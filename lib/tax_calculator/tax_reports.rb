@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TaxCalculator
   class TaxReports
     def initialize(taxpayer)
@@ -9,13 +11,13 @@ module TaxCalculator
       personal_tax = @taxpayer.personal_tax&.calculate
       corporate_tax = @taxpayer.corporate_tax&.calculate_profit_tax
       vat = @taxpayer.vat&.calculate_vat_payable
-      
+
       {
         year: year,
         summary: {
-          total_tax_paid: (personal_tax&.[](:tax_amount) || 0) + 
-                         (corporate_tax&.[](:tax_amount) || 0) +
-                         (vat&.[](:vat_payable) || 0),
+          total_tax_paid: (personal_tax&.[](:tax_amount) || 0) +
+            (corporate_tax&.[](:tax_amount) || 0) +
+            (vat&.[](:vat_payable) || 0),
           by_tax_type: {
             personal_income: personal_tax,
             corporate: corporate_tax,
@@ -38,7 +40,7 @@ module TaxCalculator
 
     def export(format: :json, report_type: :annual, year: Date.today.year)
       report = send("#{report_type}_report", year)
-      
+
       case format
       when :json
         JSON.pretty_generate(report)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TaxCalculator
   class PersonalIncomeTax
     PROGRESSIVE_RATES = [
@@ -6,7 +8,7 @@ module TaxCalculator
       { threshold: 10_000_000, rate: 0.18 }
     ].freeze
 
-    def initialize(annual_income: 0, residency_status: :resident, 
+    def initialize(annual_income: 0, residency_status: :resident,
                    period: :year, currency: :rub, dependents: 0)
       @annual_income = annual_income
       @residency_status = residency_status
@@ -32,7 +34,7 @@ module TaxCalculator
       total_income = calculate_total_income
       taxable_income = apply_deductions(total_income)
       apply_benefits(taxable_income)
-      
+
       {
         total_income: total_income,
         deductions_total: @deductions.sum { |d| d[:amount] },
@@ -53,13 +55,13 @@ module TaxCalculator
           cumulative_tax: cumulative_tax_by_month(month)
         }
       end
-      
+
       generate_report(months)
     end
 
     def forecast(next_year_income_growth: 0.1)
       projected_income = @annual_income * (1 + next_year_income_growth)
-      
+
       {
         current_tax: calculate[:tax_amount],
         projected_tax: self.class.new(
@@ -73,25 +75,28 @@ module TaxCalculator
 
     def compare_with_alternative(tax_system: :self_employed)
       alternative_tax = case tax_system
-      when :self_employed
-        calculate_self_employed_tax
-      when :sole_proprietor
-        calculate_sole_proprietor_tax
-      end
-      
+                        when :self_employed
+                          calculate_self_employed_tax
+                        when :sole_proprietor
+                          calculate_sole_proprietor_tax
+                        end
+
       {
         current_system: { name: :employee, tax: calculate[:tax_amount] },
         alternative_system: { name: tax_system, tax: alternative_tax },
         savings: calculate[:tax_amount] - alternative_tax,
-        recommendation: (calculate[:tax_amount] > alternative_tax) ? 
-          "Consider switching to #{tax_system}" : "Stay with current system"
+        recommendation: if calculate[:tax_amount] > alternative_tax
+                          "Consider switching to #{tax_system}"
+                        else
+                          'Stay with current system'
+                        end
       }
     end
 
     private
 
     def calculate_self_employed_tax
-      rate = (@annual_income > 2_400_000) ? 0.06 : 0.04
+      rate = @annual_income > 2_400_000 ? 0.06 : 0.04
       @annual_income * rate
     end
 

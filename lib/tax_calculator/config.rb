@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/tax_calculator/config.rb
 module TaxCalculator
   class Config

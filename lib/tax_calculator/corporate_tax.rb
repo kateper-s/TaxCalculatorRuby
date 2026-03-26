@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 module TaxCalculator
   class CorporateTax
     TAX_SYSTEMS = {
-      osn: { name: "General system", profit_rate: 0.20, vat_required: true },
-      usn_income: { name: "Simplified (income)", rate: 0.06, vat_exempt: true },
-      usn_income_minus_expenses: { name: "Simplified (income-expenses)", rate: 0.15, vat_exempt: true },
-      eshn: { name: "Agricultural", rate: 0.06, vat_exempt: true },
-      patent: { name: "Patent system", rate: :fixed, vat_exempt: true }
+      osn: { name: 'General system', profit_rate: 0.20, vat_required: true },
+      usn_income: { name: 'Simplified (income)', rate: 0.06, vat_exempt: true },
+      usn_income_minus_expenses: { name: 'Simplified (income-expenses)', rate: 0.15, vat_exempt: true },
+      eshn: { name: 'Agricultural', rate: 0.06, vat_exempt: true },
+      patent: { name: 'Patent system', rate: :fixed, vat_exempt: true }
     }.freeze
-
     def initialize(tax_system: :osn, fiscal_year: Date.today.year)
       @tax_system = tax_system
       @fiscal_year = fiscal_year
@@ -41,10 +42,10 @@ module TaxCalculator
       end
     end
 
-    def calculate_profit_tax(period: :year)
+    def calculate_profit_tax(*)
       income = filter_transactions_by_type(:income)
       expenses = filter_transactions_by_type(:expense)
-      
+
       {
         total_income: sum_transactions(income),
         total_expenses: sum_transactions(expenses),
@@ -63,13 +64,13 @@ module TaxCalculator
       when :linear
         annual_depreciation = asset_value / useful_life
         monthly_depreciation = annual_depreciation / 12
-        
+
         {
           annual: annual_depreciation,
           monthly: monthly_depreciation,
           schedule: (1..useful_life).map do |year|
-            { 
-              year: year, 
+            {
+              year: year,
               depreciation: annual_depreciation,
               remaining_value: asset_value - (annual_depreciation * year)
             }
@@ -83,7 +84,6 @@ module TaxCalculator
 
     def calculate_advance_payments
       quarterly_tax = calculate_profit_tax(period: :quarter)
-      
       {
         q1: quarterly_tax[:tax_amount] * 0.25,
         q2: quarterly_tax[:tax_amount] * 0.25,
@@ -95,44 +95,39 @@ module TaxCalculator
     end
 
     def tax_optimization_suggestions
-      current_tax = calculate_profit_tax
-      
+      calculate_profit_tax
       suggestions = []
-      
       if @transactions.sum { |t| t[:amount] if t[:type] == :income } < 150_000_000
         suggestions << {
           type: :system_change,
-          suggestion: "Consider switching to USN",
+          suggestion: 'Consider switching to USN',
           potential_savings: compare_tax_systems(:usn_income)
         }
       end
-      
       if has_investment_expenses?
         suggestions << {
           type: :investment_benefit,
-          suggestion: "Apply investment tax credit",
+          suggestion: 'Apply investment tax credit',
           potential_savings: calculate_investment_credit
         }
       end
-      
       if @losses_previous_years.any?
         suggestions << {
           type: :losses_carryforward,
-          suggestion: "Apply losses from previous years",
+          suggestion: 'Apply losses from previous years',
           potential_savings: calculate_losses_benefit
         }
       end
-      
       suggestions
     end
 
     def compare_tax_systems
       results = {}
-      
-      TAX_SYSTEMS.each do |system, info|
+
+      TAX_SYSTEMS.each_key do |system|
         results[system] = calculate_for_system(system)
       end
-      
+
       results.sort_by { |_, data| data[:total_tax] }.to_h
     end
 
@@ -146,7 +141,7 @@ module TaxCalculator
         advances: calculate_advance_payments,
         recommendations: tax_optimization_suggestions
       }
-      
+
       case format
       when :json
         JSON.pretty_generate(report_data)
